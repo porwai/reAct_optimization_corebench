@@ -1,0 +1,62 @@
+# GEPA Multi-Agent Optimization
+
+Real-world experiment using DSPy's GEPA to optimize a hierarchical multi-agent research system.
+
+## Overview
+
+**Task:** Lead Agent → Subagent → Web Search for complex question answering  
+**Dataset:** 5 train, 5 val (handpicked hard BrowseComp examples, 5-10+ searches each)  
+**Metric:** Cost-aware score (accuracy / num_tool_calls)  
+**Result:** 0.0125 → 0.0667 (5.3x improvement)
+
+## 📊 Key Results
+
+| Metric | Baseline | Optimized |
+|--------|----------|-----------|
+| Cost-aware Score | 0.0125 | 0.0667 |
+| Tool Descriptions | 1 sentence | Multi-paragraph guides |
+| Parameter Guidance | None | Detailed examples |
+| Workflow Structure | Generic | 9-section templates |
+
+## Files
+
+- **`BASELINE_PROMPTS.md`** - Before optimization (minimal descriptions)
+- **`OPTIMIZED_PROMPTS.md`** - After optimization (comprehensive guides)
+- **`test_simple_multiagent.py`** - Full experiment code
+
+## Setup
+
+**Architecture:** User Query → Lead Agent → Subagent → Web Search → Answer
+
+**GEPA Config:**
+- 52 metric calls, 2 threads, reflection minibatch 3/5
+- Optimizes: ReAct/Extract instructions, tool descriptions, arg descriptions
+- Pareto candidate selection
+
+**Dataset:** 10 hardcoded BrowseComp examples (historical newspapers, paywalled archives, exact phrase matching)
+
+## What Changed
+
+**Tool Descriptions:**  
+1 sentence → Multi-paragraph guides (constraints, error handling, iterative patterns)
+
+**Parameter Guidance:**  
+Empty → Detailed examples (query forms, cost/performance tradeoffs)
+
+**ReAct Instructions:**  
+Generic → Structured 7-step workflow with cost-awareness
+
+**Task Prompts:**  
+Simple → 9-section templates (objective, constraints, sources, strategy, deliverables, budget)
+
+## How to Run
+
+```bash
+uv sync
+export OPENAI_API_KEY="your-key" PERPLEXITY_API_KEY="your-key"
+uv run python test_simple_multiagent.py  # Takes ~2-4 hours
+```
+
+---
+
+**PR:** https://github.com/stanfordnlp/dspy/pull/8988
